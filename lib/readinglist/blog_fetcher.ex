@@ -29,7 +29,7 @@ defmodule Readinglist.BlogFetcher do
     parse_document(url, response.body)
   end
 
-  defp parse_document(url, document) do
+  def parse_document(url, document) do
     {:ok, document} = Floki.parse_document(document)
 
     Floki.find(document, "div.available-content div ul li")
