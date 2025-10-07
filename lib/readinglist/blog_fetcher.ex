@@ -19,7 +19,7 @@ defmodule Readinglist.BlogFetcher do
 
     # TODO: this is a result we need to catch that
     {:ok, posts} = fetch_new_posts(url)
-    Logger.info("Got List #{inspect(posts)}")
+    Logger.info("Got post list with len #{length(posts)}")
 
     Enum.each(posts, fn post ->
       ReadingLists.add_item_if_new(scope.user, post)

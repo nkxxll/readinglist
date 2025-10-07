@@ -182,7 +182,7 @@ defmodule Readinglist.ReadingLists do
 
   """
   def list_list_items(%Scope{} = scope) do
-    Repo.all_by(ListItem, user_id: scope.user.id)
+    Repo.all(from l in ListItem, where: l.user_id == ^scope.user.id)
   end
 
   @doc """
@@ -331,9 +331,11 @@ defmodule Readinglist.ReadingLists do
       from(i in ListItem,
         where:
           i.user_id == ^user.id and i.source == ^post.source and
-            i.description == ^post.description
+            like(i.description, ^post.description)
       )
       |> Repo.exists?()
+
+    Logger.info("Exists #{exists?}")
 
     # Only create the item if it doesn’t exist
     unless exists? do
@@ -342,11 +344,14 @@ defmodule Readinglist.ReadingLists do
       attrs = %{
         title: post.title,
         source: post.source,
+        parent: post.parent,
         description: post.description,
         reading_list_id: reading_list.id
       }
 
-      Logger.info("Item got added to default list #{inspect(attrs)}")
+      Logger.info(
+        "Item got added to default list #{inspect(attrs)}; readinglist: #{reading_list.name}"
+      )
 
       create_list_item(scope, attrs)
     end

@@ -18,8 +18,8 @@ defmodule Readinglist.ReadingLists.ListItem do
   @doc false
   def changeset(list_item, attrs, user_scope) do
     list_item
-    |> cast(attrs, [:title, :description, :source, :hidden, :read, :reading_list_id])
-    |> validate_required([:title, :source, :reading_list_id])
+    |> cast(attrs, [:title, :description, :source, :parent, :hidden, :read, :reading_list_id])
+    |> validate_required([:title, :source, :parent, :reading_list_id])
     |> foreign_key_constraint(:reading_list_id)
     |> put_change(:user_id, user_scope.user.id)
   end
