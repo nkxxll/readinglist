@@ -60,6 +60,9 @@ defmodule ReadinglistWeb.Router do
 
     post "/fetch", PageController, :fetch
     get "/readinglist", ReadinglistController, :index
+
+    post "/list_item/read/:id", ListItemController, :mark_as_read
+    post "/list_item/unread/:id", ListItemController, :mark_as_unread
   end
 
   scope "/", ReadinglistWeb do

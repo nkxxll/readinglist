@@ -1,11 +1,53 @@
-<Layouts.app flash={@flash}>
+<Layouts.flash_group flash={@flash} />
+<div class="w-full overflow-x-auto">
   <.table id="reading-list" rows={@list}>
-    <:col :let={item} label="Title">{item.title}</:col>
-    <:col :let={item} label="Description">{item.description}</:col>
-    <:col :let={item} label="Source">{item.source}</:col>
-    <:col :let={item} label="Parent">{item.parent}</:col>
-    <:col :let={item} label="Hidden">{if item.hidden, do: "✅", else: "❌"}</:col>
-    <:col :let={item} label="Read">{if item.read, do: "✅", else: "❌"}</:col>
+    <:col :let={item} label="Title">
+      <div class="font-bold w-48 truncate">{item.title}</div>
+    </:col>
+    <:col :let={item} label="Description">
+      <div class="max-h-24 overflow-y-auto w-[40rem]">
+        {item.description}
+      </div>
+    </:col>
+    <:col :let={item} label="Source">
+      <div class="w-64 truncate">
+        <.link href={item.source} target="_blank">{item.source}</.link>
+      </div>
+    </:col>
+    <:col :let={item} label="Parent">
+      <div class="w-32 truncate">{item.parent}</div>
+    </:col>
+    <:col :let={item} label="Hidden">
+      <div class="w-12 text-center">
+        <%= if item.hidden do %>
+          <.icon name="hero-check" class="h-5 w-5 text-green-500" />
+        <% else %>
+          <.icon name="hero-x-mark" class="h-5 w-5 text-red-500" />
+        <% end %>
+      </div>
+    </:col>
+    <:col :let={item} label="Read">
+      <div class="flex items-center w-16">
+        <span>
+          <%= if item.read do %>
+            <.icon name="hero-check" class="h-5 w-5 text-green-500" />
+          <% else %>
+            <.icon name="hero-x-mark" class="h-5 w-5 text-red-500" />
+          <% end %>
+        </span>
+        <span class="ml-2">
+          <%= if item.read do %>
+            <.link href={~p"/list_item/unread/#{item.id}"} method="post">
+              <.icon name="hero-x-circle" class="h-5 w-5 text-gray-400" />
+            </.link>
+          <% else %>
+            <.link href={~p"/list_item/read/#{item.id}"} method="post">
+              <.icon name="hero-check-circle" class="h-5 w-5 text-gray-400" />
+            </.link>
+          <% end %>
+        </span>
+      </div>
+    </:col>
 
     <%!-- <:action :let={item}> --%>
     <%!--   <.link navigate={~p"/readinglist/#{item}"}>Show</.link> --%>
@@ -21,4 +63,4 @@
     <%!--   </.link> --%>
     <%!-- </:action> --%>
   </.table>
-</Layouts.app>
+</div>
