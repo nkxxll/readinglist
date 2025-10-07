@@ -46,6 +46,14 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+window.addEventListener("keydown", e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+    e.preventDefault()
+    document.getElementById("search-query").focus()
+  }
+})
+
+
 // The lines below enable quality of life phoenix_live_reload
 // development features:
 //

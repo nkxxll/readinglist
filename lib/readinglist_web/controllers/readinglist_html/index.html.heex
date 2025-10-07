@@ -1,7 +1,7 @@
 <Layouts.flash_group flash={@flash} />
 
-<.form :let={f} for={%{}} action={~p"/readinglist"} method="get" class="pb-4">
-  <div class="flex items-center gap-2">
+<.form :let={f} for={%{}} action={~p"/readinglist"} method="get" class="w-1/2 m-auto">
+  <div class="flex items-center justify-center align-middle gap-2">
     <.input
       field={f[:search]}
       type="text"
@@ -9,13 +9,13 @@
       id="search-query"
       value={@query}
       placeholder="Search..."
-      class="w-full"
+      class="border rounded p-2 text-xl"
     />
-    <button>Search</button>
+    <button class=""></button>
   </div>
 </.form>
 
-<div class="w-full overflow-x-auto">
+<div class="w-full flex flex-col items-center overflow-x-auto">
   <.table id="reading-list" rows={@list}>
     <:col :let={item} label="Title">
       <div class="font-bold w-48 truncate">{item.title}</div>
