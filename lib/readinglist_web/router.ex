@@ -57,6 +57,9 @@ defmodule ReadinglistWeb.Router do
     end
 
     post "/users/update-password", UserSessionController, :update_password
+
+    post "/fetch", PageController, :fetch
+    get "/readinglist", ReadinglistController, :index
   end
 
   scope "/", ReadinglistWeb do

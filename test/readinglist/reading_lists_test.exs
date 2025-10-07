@@ -25,14 +25,19 @@ defmodule Readinglist.ReadingListsTest do
       reading_list = reading_list_fixture(scope)
       other_scope = user_scope_fixture()
       assert ReadingLists.get_reading_list!(scope, reading_list.id) == reading_list
-      assert_raise Ecto.NoResultsError, fn -> ReadingLists.get_reading_list!(other_scope, reading_list.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        ReadingLists.get_reading_list!(other_scope, reading_list.id)
+      end
     end
 
     test "create_reading_list/2 with valid data creates a reading_list" do
       valid_attrs = %{name: "some name"}
       scope = user_scope_fixture()
 
-      assert {:ok, %ReadingList{} = reading_list} = ReadingLists.create_reading_list(scope, valid_attrs)
+      assert {:ok, %ReadingList{} = reading_list} =
+               ReadingLists.create_reading_list(scope, valid_attrs)
+
       assert reading_list.name == "some name"
       assert reading_list.user_id == scope.user.id
     end
@@ -47,7 +52,9 @@ defmodule Readinglist.ReadingListsTest do
       reading_list = reading_list_fixture(scope)
       update_attrs = %{name: "some updated name"}
 
-      assert {:ok, %ReadingList{} = reading_list} = ReadingLists.update_reading_list(scope, reading_list, update_attrs)
+      assert {:ok, %ReadingList{} = reading_list} =
+               ReadingLists.update_reading_list(scope, reading_list, update_attrs)
+
       assert reading_list.name == "some updated name"
     end
 
@@ -64,7 +71,10 @@ defmodule Readinglist.ReadingListsTest do
     test "update_reading_list/3 with invalid data returns error changeset" do
       scope = user_scope_fixture()
       reading_list = reading_list_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = ReadingLists.update_reading_list(scope, reading_list, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               ReadingLists.update_reading_list(scope, reading_list, @invalid_attrs)
+
       assert reading_list == ReadingLists.get_reading_list!(scope, reading_list.id)
     end
 
@@ -72,14 +82,20 @@ defmodule Readinglist.ReadingListsTest do
       scope = user_scope_fixture()
       reading_list = reading_list_fixture(scope)
       assert {:ok, %ReadingList{}} = ReadingLists.delete_reading_list(scope, reading_list)
-      assert_raise Ecto.NoResultsError, fn -> ReadingLists.get_reading_list!(scope, reading_list.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        ReadingLists.get_reading_list!(scope, reading_list.id)
+      end
     end
 
     test "delete_reading_list/2 with invalid scope raises" do
       scope = user_scope_fixture()
       other_scope = user_scope_fixture()
       reading_list = reading_list_fixture(scope)
-      assert_raise MatchError, fn -> ReadingLists.delete_reading_list(other_scope, reading_list) end
+
+      assert_raise MatchError, fn ->
+        ReadingLists.delete_reading_list(other_scope, reading_list)
+      end
     end
 
     test "change_reading_list/2 returns a reading_list changeset" do
@@ -111,7 +127,10 @@ defmodule Readinglist.ReadingListsTest do
       list_item = list_item_fixture(scope)
       other_scope = user_scope_fixture()
       assert ReadingLists.get_list_item!(scope, list_item.id) == list_item
-      assert_raise Ecto.NoResultsError, fn -> ReadingLists.get_list_item!(other_scope, list_item.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        ReadingLists.get_list_item!(other_scope, list_item.id)
+      end
     end
 
     test "create_list_item/2 with valid data creates a list_item" do
@@ -144,9 +163,18 @@ defmodule Readinglist.ReadingListsTest do
     test "update_list_item/3 with valid data updates the list_item" do
       scope = user_scope_fixture()
       list_item = list_item_fixture(scope)
-      update_attrs = %{hidden: false, read: false, description: "some updated description", title: "some updated title", source: "some updated source"}
 
-      assert {:ok, %ListItem{} = list_item} = ReadingLists.update_list_item(scope, list_item, update_attrs)
+      update_attrs = %{
+        hidden: false,
+        read: false,
+        description: "some updated description",
+        title: "some updated title",
+        source: "some updated source"
+      }
+
+      assert {:ok, %ListItem{} = list_item} =
+               ReadingLists.update_list_item(scope, list_item, update_attrs)
+
       assert list_item.hidden == false
       assert list_item.read == false
       assert list_item.description == "some updated description"
@@ -167,7 +195,10 @@ defmodule Readinglist.ReadingListsTest do
     test "update_list_item/3 with invalid data returns error changeset" do
       scope = user_scope_fixture()
       list_item = list_item_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = ReadingLists.update_list_item(scope, list_item, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               ReadingLists.update_list_item(scope, list_item, @invalid_attrs)
+
       assert list_item == ReadingLists.get_list_item!(scope, list_item.id)
     end
 

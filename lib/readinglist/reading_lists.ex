@@ -3,6 +3,7 @@ defmodule Readinglist.ReadingLists do
   The ReadingLists context.
   """
 
+  require Logger
   import Ecto.Query, warn: false
   alias Readinglist.Repo
 
@@ -289,13 +290,14 @@ defmodule Readinglist.ReadingLists do
   Returns a list of all users that have at least one reading list.
   """
   def list_users_with_reading_lists do
-    user_ids =
-      from(l in ReadingList,
-        select: l.user_id,
-        distinct: true)
-      |> Repo.all()
+    query =
+      from u in User,
+        join: l in ReadingList,
+        on: l.user_id == u.id,
+        group_by: u.id,
+        select: u
 
-    Repo.all(from u in User, where: u.id in ^user_ids)
+    Repo.all(query)
   end
 
   @doc """
@@ -304,27 +306,49 @@ defmodule Readinglist.ReadingLists do
   It will add the item to the user's first reading list.
   """
   def add_item_if_new(user, post) do
-    # For now, we just pick the first reading list for a user.
-    # A user should have at least one, since we're iterating over users with reading lists.
-    if reading_list = Repo.get_by(ReadingList, user_id: user.id) do
-      # Check if an item with the same source already exists for that user.
-      exists? =
-        from(i in ListItem, where: i.user_id == ^user.id and i.source == ^post.source)
-        |> Repo.exists?()
+    Logger.info("We are in the add item if new method")
 
-      if !exists? do
-        scope = %Scope{user: user}
+    reading_list =
+      case Repo.get_by(ReadingList, user_id: user.id) do
+        nil ->
+          Logger.info("default list got created")
+          # No reading list exists → create a default one
+          {:ok, default} =
+            %ReadingList{
+              user_id: user.id,
+              name: "Default"
+            }
+            |> Repo.insert()
 
-        attrs =
-          %{
-            title: post.title,
-            source: post.source,
-            description: post.description,
-            reading_list_id: reading_list.id
-          }
+          default
 
-        create_list_item(scope, attrs)
+        list ->
+          list
       end
+
+    # Check if the item already exists for this user
+    exists? =
+      from(i in ListItem,
+        where:
+          i.user_id == ^user.id and i.source == ^post.source and
+            i.description == ^post.description
+      )
+      |> Repo.exists?()
+
+    # Only create the item if it doesn’t exist
+    unless exists? do
+      scope = %Scope{user: user}
+
+      attrs = %{
+        title: post.title,
+        source: post.source,
+        description: post.description,
+        reading_list_id: reading_list.id
+      }
+
+      Logger.info("Item got added to default list #{inspect(attrs)}")
+
+      create_list_item(scope, attrs)
     end
   end
 end

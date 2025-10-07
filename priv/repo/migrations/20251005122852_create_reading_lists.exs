@@ -3,6 +3,7 @@ defmodule Readinglist.Repo.Migrations.CreateReadingLists do
 
   def change do
     create table(:reading_lists) do
+      add :name, :string
       add :user_id, references(:users, type: :id, on_delete: :delete_all)
 
       timestamps(type: :utc_datetime)

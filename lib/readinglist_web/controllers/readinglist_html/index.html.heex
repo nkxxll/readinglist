@@ -1,0 +1,24 @@
+<Layouts.app flash={@flash}>
+  <.table id="reading-list" rows={@list}>
+    <:col :let={item} label="Title">{item.title}</:col>
+    <:col :let={item} label="Description">{item.description}</:col>
+    <:col :let={item} label="Source">{item.source}</:col>
+    <:col :let={item} label="Parent">{item.parent}</:col>
+    <:col :let={item} label="Hidden">{if item.hidden, do: "✅", else: "❌"}</:col>
+    <:col :let={item} label="Read">{if item.read, do: "✅", else: "❌"}</:col>
+
+    <%!-- <:action :let={item}> --%>
+    <%!--   <.link navigate={~p"/readinglist/#{item}"}>Show</.link> --%>
+    <%!-- </:action> --%>
+    <%!----%>
+    <%!-- <:action :let={item}> --%>
+    <%!--   <.link navigate={~p"/readinglist/#{item}/edit"}>Edit</.link> --%>
+    <%!-- </:action> --%>
+    <%!----%>
+    <%!-- <:action :let={item}> --%>
+    <%!--   <.link href={~p"/readinglist/#{item}"} method="delete" data-confirm="Are you sure?"> --%>
+    <%!--     Delete --%>
+    <%!--   </.link> --%>
+    <%!-- </:action> --%>
+  </.table>
+</Layouts.app>

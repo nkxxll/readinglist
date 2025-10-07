@@ -20,10 +20,9 @@ config :readinglist, :scopes,
     test_setup_helper: :register_and_log_in_user
   ]
 
-config :readinglist, :blog, [
+config :readinglist, :blog,
   base_url: "https://registerspill.thorstenball.com/p/",
   blog_prefix: "joy-and-curiosity-"
-]
 
 config :readinglist,
   ecto_repos: [Readinglist.Repo],
