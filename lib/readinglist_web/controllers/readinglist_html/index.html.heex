@@ -1,4 +1,20 @@
 <Layouts.flash_group flash={@flash} />
+
+<.form :let={f} for={%{}} action={~p"/readinglist"} method="get" class="pb-4">
+  <div class="flex items-center gap-2">
+    <.input
+      field={f[:search]}
+      type="text"
+      name="search[query]"
+      id="search-query"
+      value={@query}
+      placeholder="Search..."
+      class="w-full"
+    />
+    <button>Search</button>
+  </div>
+</.form>
+
 <div class="w-full overflow-x-auto">
   <.table id="reading-list" rows={@list}>
     <:col :let={item} label="Title">
@@ -10,7 +26,7 @@
       </div>
     </:col>
     <:col :let={item} label="Source">
-      <div class="w-64 truncate">
+      <div class="w-64 break-all">
         <.link href={item.source} target="_blank">{item.source}</.link>
       </div>
     </:col>

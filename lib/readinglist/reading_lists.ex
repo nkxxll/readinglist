@@ -185,6 +185,23 @@ defmodule Readinglist.ReadingLists do
     Repo.all(from l in ListItem, where: l.user_id == ^scope.user.id)
   end
 
+  def list_list_items(%Scope{} = scope, search_query) do
+    query =
+      from l in ListItem, where: l.user_id == ^scope.user.id, order_by: [desc: l.inserted_at]
+
+    query =
+      if search_query do
+        from l in query,
+          where:
+            like(l.title, ^"%#{search_query}%") or
+              like(l.description, ^"%#{search_query}%")
+      else
+        query
+      end
+
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single list_item.
 
