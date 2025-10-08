@@ -14,21 +14,34 @@ defmodule Readinglist.BlogFetcher do
     "#{@blog_url}#{@blog_prefix}#{number}"
   end
 
+  def safe_refresh_reading_lists(id, %Scope{} = scope) do
+    url = build_url(id)
+
+    case refresh_reading_lists(url, scope) do
+      :ok ->
+        {:ok, id}
+
+      {:error, reason} ->
+        {:error, id, reason}
+    end
+  end
+
   def refresh_reading_lists(url, %Scope{} = scope) do
     Logger.info("Refreshing reading lists from #{url}...")
 
-    # TODO: this is a result we need to catch that
-    {:ok, posts} = fetch_new_posts(url)
-    Logger.info("Got post list with len #{length(posts)}")
+    with {:ok, posts} <- fetch_new_posts(url) do
+      Logger.info("Got post list with len #{length(posts)}")
 
-    Enum.each(posts, fn post ->
-      ReadingLists.add_item_if_new(scope.user, post)
-    end)
+      Enum.each(posts, fn post ->
+        ReadingLists.add_item_if_new(scope.user, post)
+      end)
+    end
   end
 
   defp fetch_new_posts(url) do
-    {:ok, response} = Req.get(url)
-    parse_document(url, response.body)
+    with {:ok, response} <- Req.get(url) do
+      parse_document(url, response.body)
+    end
   end
 
   @spec parse_document(String.t(), binary()) :: {:ok, list()} | {:error, String.t()}

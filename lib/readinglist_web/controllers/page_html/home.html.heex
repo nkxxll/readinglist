@@ -3,6 +3,9 @@
 <h1>Blog Fetcher</h1>
 
 <.form :let={f} for={%{}} action={~p"/fetch"} method="post">
-  <.input field={f[:id]} type="number" name="id" label="Blog ID" />
+  <div class="flex items-center gap-2">
+    <.input field={f[:start_id]} type="number" name="start_id" label="Start ID" />
+    <.input field={f[:end_id]} type="number" name="end_id" label="End ID" />
+  </div>
   <button>Fetch Blogs</button>
 </.form>

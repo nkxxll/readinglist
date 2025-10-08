@@ -10,6 +10,8 @@ Modify the blog fetcher to support fetching posts for a range of IDs, handle err
 
 - Update the form to accept a `start_id` and an `end_id` to define the range.
 - This will replace the single `id` input.
+- if only the `start_id` is entered this is OK only one blog will be fetched in this case like right
+  now
 
 **Example:**
 ```heex
@@ -28,11 +30,12 @@ Modify the blog fetcher to support fetching posts for a range of IDs, handle err
 - It will parse the IDs, create a range, and iterate over it.
 - For each ID, it will call a new `BlogFetcher.safe_refresh_reading_lists/2` function.
 - The results (success or failure) for each ID will be collected.
-- Flash messages will be generated based on the results and displayed to the user on the home page.
+- A list which displays the success or failure of each fetch request will be displayed
 
 **Example:**
 ```elixir
 def fetch(conn, %{"start_id" => start_id, "end_id" => end_id}) do
+  # if only the start is given only one fetch will occur
   start_id = String.to_integer(start_id)
   end_id = String.to_integer(end_id)
 
@@ -54,9 +57,7 @@ end
 
 ### 3. Blog Fetcher Changes (`lib/readinglist/blog_fetcher.ex`)
 
-- A new function `safe_refresh_reading_lists/2` will be created.
-- This function will take an `id` and the `scope`.
-- It will wrap the call to `refresh_reading_lists/2` in a `try/rescue` block to catch any errors during the fetching and parsing process.
+- `refresh_reading_lists/2` will be updated (looking at the todo comment) to return a result type in a to catch any errors during the fetching and parsing process.
 - It will return `{:ok, id}` on success and `{:error, id, reason}` on failure.
 - The existing `refresh_reading_lists/2` will be updated to return the result from `fetch_new_posts` instead of pattern matching on it, allowing the error to be propagated up.
 
