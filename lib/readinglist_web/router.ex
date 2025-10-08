@@ -63,6 +63,7 @@ defmodule ReadinglistWeb.Router do
 
     post "/list_item/read/:id", ListItemController, :mark_as_read
     post "/list_item/unread/:id", ListItemController, :mark_as_unread
+    post "/list_item/toggle_hidden/:id", ListItemController, :toggle_hidden
   end
 
   scope "/", ReadinglistWeb do

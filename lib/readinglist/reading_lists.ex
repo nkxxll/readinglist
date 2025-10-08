@@ -181,11 +181,11 @@ defmodule Readinglist.ReadingLists do
       [%ListItem{}, ...]
 
   """
-  def list_list_items(%Scope{} = scope) do
-    Repo.all(from l in ListItem, where: l.user_id == ^scope.user.id)
-  end
+  def list_list_items(%Scope{} = scope, params \\ %{}) do
+    search_query = params["query"]
+    read_filter = params["read_filter"] || "including"
+    hidden_filter = params["hidden_filter"] || "including"
 
-  def list_list_items(%Scope{} = scope, search_query) do
     query =
       from l in ListItem, where: l.user_id == ^scope.user.id, order_by: [desc: l.inserted_at]
 
@@ -197,6 +197,20 @@ defmodule Readinglist.ReadingLists do
               like(l.description, ^"%#{search_query}%")
       else
         query
+      end
+
+    query =
+      case read_filter do
+        "only" -> from l in query, where: l.read == true
+        "excluding" -> from l in query, where: l.read == false
+        _ -> query
+      end
+
+    query =
+      case hidden_filter do
+        "only" -> from l in query, where: l.hidden == true
+        "excluding" -> from l in query, where: l.hidden == false
+        _ -> query
       end
 
     Repo.all(query)
@@ -264,6 +278,14 @@ defmodule Readinglist.ReadingLists do
       broadcast_list_item(scope, {:updated, list_item})
       {:ok, list_item}
     end
+  end
+
+  def toggle_hidden_status(%Scope{} = scope, %ListItem{} = item) do
+    true = item.user_id == scope.user.id
+
+    item
+    |> Ecto.Changeset.change(%{hidden: !item.hidden})
+    |> Repo.update()
   end
 
   @doc """
