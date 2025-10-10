@@ -61,19 +61,6 @@ end
 - It will return `{:ok, id}` on success and `{:error, id, reason}` on failure.
 - The existing `refresh_reading_lists/2` will be updated to return the result from `fetch_new_posts` instead of pattern matching on it, allowing the error to be propagated up.
 
-**Example `safe_refresh_reading_lists/2`:**
-```elixir
-def safe_refresh_reading_lists(id, %Scope{} = scope) do
-  try do
-    url = build_url(id)
-    refresh_reading_lists(url, scope)
-    {:ok, id}
-  rescue
-    e -> {:error, id, e}
-  end
-end
-```
-
 **Example `refresh_reading_lists/2` modification:**
 ```elixir
 def refresh_reading_lists(url, %Scope{} = scope) do
