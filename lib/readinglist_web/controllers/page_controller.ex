@@ -16,7 +16,7 @@ defmodule ReadinglistWeb.PageController do
           end
 
         results =
-          (start_id_int..end_id_int)
+          start_id_int..end_id_int
           |> Enum.map(fn id ->
             BlogFetcher.safe_refresh_reading_lists(id, conn.assigns.current_scope)
           end)

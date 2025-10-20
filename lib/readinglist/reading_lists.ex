@@ -5,11 +5,18 @@ defmodule Readinglist.ReadingLists do
 
   require Logger
   import Ecto.Query, warn: false
+  alias Readinglist.ReadingLists.ListItem
   alias Readinglist.Repo
 
   alias Readinglist.Accounts.User
   alias Readinglist.ReadingLists.ReadingList
   alias Readinglist.Accounts.Scope
+
+  @spec sort_reading_list(list(ListItem)) :: list(ListItem)
+  def sort_reading_list(list) do
+    Logger.info("list::" <> inspect(list))
+    Enum.sort_by(list, & &1.parent, :desc)
+  end
 
   @doc """
   Subscribes to scoped notifications about any reading_list changes.
@@ -285,6 +292,14 @@ defmodule Readinglist.ReadingLists do
 
     item
     |> Ecto.Changeset.change(%{hidden: !item.hidden})
+    |> Repo.update()
+  end
+
+  def toggle_read_status(%Scope{} = scope, %ListItem{} = item) do
+    true = item.user_id == scope.user.id
+
+    item
+    |> Ecto.Changeset.change(%{read: !item.read})
     |> Repo.update()
   end
 

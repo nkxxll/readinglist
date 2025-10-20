@@ -24,6 +24,8 @@ defmodule Readinglist.BlogFetcherTest do
     result = BlogFetcher.parse_document("example.url.com", example_blog_list_for_parsing(1))
     assert {:ok, items} = result
     items_string = inspect(items)
-    assert items_string == "[%{parent: \"example.url.com\", description: \"My favorite this week: matklad’sInverse Triangle Inequality. Small commits, small refactors, small releases. Yes, yes, yes.\", title: \"Inverse Triangle Inequality\", source: \"https://matklad.github.io/2025/07/07/inverse-triangle-inequality.html\"}]"
+
+    assert items_string ==
+             "[%{parent: \"example.url.com\", description: \"My favorite this week: matklad’sInverse Triangle Inequality. Small commits, small refactors, small releases. Yes, yes, yes.\", title: \"Inverse Triangle Inequality\", source: \"https://matklad.github.io/2025/07/07/inverse-triangle-inequality.html\"}]"
   end
 end

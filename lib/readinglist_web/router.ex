@@ -54,6 +54,7 @@ defmodule ReadinglistWeb.Router do
       on_mount: [{ReadinglistWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      live "/readinglist-live", ReadinglistLive.Index, :index
     end
 
     post "/users/update-password", UserSessionController, :update_password
